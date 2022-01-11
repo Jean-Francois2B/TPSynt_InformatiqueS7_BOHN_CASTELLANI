@@ -28,15 +28,16 @@ int main(void)
 		else{
 		//On sait qu'on est ici dans le père :
 			wait(&status);
+			//Il faut faire la différence entre un signal et un code de retour.
 			if(WIFEXITED(status)){
-				write(STDOUT_FILENO, SHELL_EXIT, strlen(SHELL_EXIT));
-				STATUS[0] = (WEXITSTATUS(status))+'0';
-				write(STDOUT_FILENO, STATUS, 1);
-				write(STDOUT_FILENO, SHELL_CLOSE, strlen(SHELL_CLOSE));
+				write(STDOUT_FILENO, SHELL_EXIT, strlen(SHELL_EXIT)); //Mise en forme de l'écriture
+				STATUS[0] = (WEXITSTATUS(status))+'0'; //On oblige la conversion de l'entier WEXITSTATUS(status) en char pour pouvoir l'afficher.
+				write(STDOUT_FILENO, STATUS, 1); 
+				write(STDOUT_FILENO, SHELL_CLOSE, strlen(SHELL_CLOSE)); //Mise en forme de l'écriture
 			}
 			else if(WIFSIGNALED(status)){
 				write(STDOUT_FILENO, SHELL_SIGN, strlen(SHELL_SIGN));
-				STATUS[0] = (WTERMSIG(status))+'0';
+				STATUS[0] = (WTERMSIG(status))+'0'; //On oblige la conversion de l'entier WEXITSTATUS(status) en char pour pouvoir l'afficher.
 				write(STDOUT_FILENO, STATUS, 1);
 				write(STDOUT_FILENO, SHELL_CLOSE, strlen(SHELL_CLOSE));
 			}
