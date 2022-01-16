@@ -51,6 +51,43 @@ On récupère la donnée sur le premier caractère du tableau STATUS via la comm
 Ou
 >   STATUS[0] = (WTERMSIG(status))+'0';
 
+---
+### Mesure du temps d’exécution de la commande
+On mesure le temps d'exécution du processus fils en appelant la fonction clock_gettime avant et après son exécution. On stocke chaque instant dans une structure "timespec" puis on soustrait les deux instants pour avoir le temps d'exécution.
+On crée un tableau "informations" qui contient le code de retour et le temps d'exécution du processus fils, et on l'affiche comme précédemment.
+>   sprintf(information, "%d|%.2f ms", WEXITSTATUS(status), tempsExecution);
+
+
+---
+### Exécution d’une commande avec arguments
+Les arguments sont séparés par des espaces lorsque l'on compile, donc on peut utiliser la fonction "strtok" pour lire ces arguments.
+>   argv[0]=strtok(commande," ");
+
+
+On récupère chaque argument dans le tableau argv[], et on appelle la fonction a exécutée via la ligne de commande :
+>   int retour = execvp(argv[0],argv);
+
+
+L'argument argv[0] contient la ligne a exécuter, et le reste du tableau argv contient les arguments à ajouter.
+
+
+---
+### Gestion des redirections vers stdin et stdout
+On peut récupérer des données d'un fichier ou écrire des données dans un fichier directement à partir de notre programme. Il faut pour cela rediriger l'écriture ou la lecture vers ce fichier.
+On change pour cela le descripteur du fichier et on ouvre le nouveau fichier que l'on souhaite utiliser :
+>   int nouveaufd = open(emplacementRedirectionSortie, O_WRONLY);
+
+
+Puis on duplique le descripteur afin que STDOUT/IN_FILENO redirige vers le fichier voulu:
+>   dup2(nouveaufd,STDOUT_FILENO);
+
+
+Puis on referme le fihcier décrit par le premier descripteur (car le fichier est déjà ouvert avec STDOUT/IN_FILENO):
+>   close(nouveaufd);
+
+
+
+
 
 
 
