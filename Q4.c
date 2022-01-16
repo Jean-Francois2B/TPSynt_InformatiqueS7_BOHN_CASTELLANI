@@ -37,7 +37,7 @@ int main(void)
 			}
 			else if(WIFSIGNALED(status)){
 				write(STDOUT_FILENO, SHELL_SIGN, strlen(SHELL_SIGN));
-				STATUS[0] = (WTERMSIG(status))+'0'; //On oblige la conversion de l'entier WEXITSTATUS(status) en char pour pouvoir l'afficher.
+				STATUS[0] = (WTERMSIG(status))+'0'; //On oblige la conversion de l'entier WTERMSIG(status) en char pour pouvoir l'afficher.
 				write(STDOUT_FILENO, STATUS, 1);
 				write(STDOUT_FILENO, SHELL_CLOSE, strlen(SHELL_CLOSE));
 			}
